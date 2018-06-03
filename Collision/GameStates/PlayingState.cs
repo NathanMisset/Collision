@@ -25,8 +25,9 @@ namespace CollisionBalls {
 
                 Vector2 aPositon = new Vector2(random.Next(100, 700), random.Next(100, 500));
                 Vector2 aVelocity = new Vector2(((float)random.NextDouble() - 0.5f) * 10, ((float)random.NextDouble() - 0.5f) * 10);
+                float aRadius = random.Next(8, 23);
 
-                balls.Add(new Ball(assetName, aPositon, aVelocity, Vector2.Zero, new Vector2(0, EARTH_GRAVITY), 15f, 0.85f));
+                balls.Add(new Ball(assetName, aPositon, aVelocity, Vector2.Zero, new Vector2(0, EARTH_GRAVITY), aRadius, 0.85f));
             }
             this.Add(balls);
         }

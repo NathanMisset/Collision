@@ -14,6 +14,9 @@ namespace CollisionBalls {
         private Vector2 collisionNormal;
         private Vector2 resetVector;
         private Vector2 parrallelVelocity;
+        private Vector2 changeVelocity;
+        private float inverseMass;
+        private float totalInverseMass;
 
         public Ball(string assetName, Vector2 position, Vector2 velocity, Vector2 acceleration, Vector2 gravity, float radius, float inelastic = 1f)
             : base(assetName, 0, "ball") {
@@ -26,6 +29,7 @@ namespace CollisionBalls {
             Radius = radius;
             scale = radius * 2 / Width;
             InelasticFriction = inelastic;
+            inverseMass = 1 / (radius * radius);
         }
 
         public override void Update(GameTime gameTime) {
@@ -53,12 +57,17 @@ namespace CollisionBalls {
                 other.position += resetVector / 2;
 
                 //Step 6: calculate the velocity component parallel to normal
-                parrallelVelocity = (velocity * collisionNormal) * collisionNormal;
-                
-                //Step 7: calculate the changeVelocity
+                changeVelocity = (velocity * collisionNormal) * collisionNormal;
 
+                //Stap 7: calculate the totalinversemass
+                totalInverseMass = this.inverseMass + other.inverseMass;
 
-                //Step 8: change the velocities (assume equal mass)
+                //Step 8: calculate the changeVelocity
+                changeVelocity = changeVelocity/totalInverseMass;
+
+                //Step 9: change the velocities 
+                velocity = velocity + changeVelocity * inverseMass;
+                other.velocity = other.velocity + changeVelocity * other.inverseMass; 
             }
         }
 
@@ -86,6 +95,7 @@ namespace CollisionBalls {
             if (position.X < radius) {
                 position.X = radius;
                 velocity.X *= -inelasticFriction;
+
             }
             if (position.X > GameEnvironment.Screen.X - radius) {
                 position.X = GameEnvironment.Screen.X - radius;
