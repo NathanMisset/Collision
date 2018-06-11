@@ -9,12 +9,15 @@ namespace CollisionBalls {
         private Vector2 acceleration;
         private Vector2 gravity;
         private float inelasticFriction;
+
         private Vector2 afstandVector;
         private float afstand;
+
         private Vector2 collisionNormal;
         private Vector2 resetVector;
-        private Vector2 parrallelVelocity;
         private Vector2 changeVelocity;
+        private float bounceFactor;
+
         private float inverseMass;
         private float totalInverseMass;
 
@@ -57,8 +60,8 @@ namespace CollisionBalls {
                 other.position += resetVector / 2;
 
                 //Step 6: calculate the velocity component parallel to normal
-                changeVelocity = (velocity * collisionNormal) * collisionNormal;
 
+                changeVelocity = velocity - 2 * Vector2.Dot(velocity, collisionNormal) * collisionNormal; 
                 //Stap 7: calculate the totalinversemass
                 totalInverseMass = this.inverseMass + other.inverseMass;
 
@@ -67,7 +70,7 @@ namespace CollisionBalls {
 
                 //Step 9: change the velocities 
                 velocity = velocity + changeVelocity * inverseMass;
-                other.velocity = other.velocity + changeVelocity * other.inverseMass; 
+                other.velocity = other.velocity - changeVelocity * other.inverseMass; 
             }
         }
 
